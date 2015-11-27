@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 	cout << "Converting to grayscale...\n";
 	cvtColor(src, src_gray, CV_BGR2GRAY);
 	cout << "Blur...\n";
-	blur(src_gray, src_gray, Size(3,3));
+	blur(src_gray, src_gray, Size(100,100));
 
 	cout << "Creating Source window...\n";
 	string source_window = "Source";
@@ -51,6 +51,8 @@ void thresh_callback(int, void*)
 
 	cout << "\tthreshold...\n";
 	threshold(src_gray, threshold_output, thresh, 255, THRESH_BINARY);
+	namedWindow("Threshold", CV_WINDOW_NORMAL);
+	imshow("Threshold", threshold_output);
 	cout << "\tfindContours...\n";
 	findContours(threshold_output, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 
@@ -67,8 +69,6 @@ void thresh_callback(int, void*)
 		approxPolyDP(Mat(contours[i]), contours_poly[i], 3, true);
 		cout << "\t\t boundingRect for contour " << i << endl;
 		boundRect[i] = boundingRect(Mat(contours_poly[i]));
-//		cout << "\t\t minEnclosingCircle for contour " << i << endl;
-//		minEnclosingCircle((Mat) contours_poly[i], center[i], radius[i]);
 	}
 
 	cout << "\tCreating " << contours.size() << " drawings\n";
@@ -79,13 +79,33 @@ void thresh_callback(int, void*)
 		if(boundRect[i].height <= 250 || boundRect[i].width <= 250)
 			continue;	//ignore small rectangles
 		Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
-		cout << "\t\t drawContours for contour " << i << endl;
+		cout << "\t\tdrawContours for contour " << i << endl;
 		drawContours(drawing, contours_poly, i, color, 1, 8, vector<Vec4i>(), 0, Point());
-		cout << "\t\t rectangle for contour " << i << endl;
+		cout << "\t\trectangle for contour " << i << endl;
 		rectangle(drawing, boundRect[i].tl(), boundRect[i].br(), 2, 8, 0);
-//		cout << "\t\t circle for contour " << i << endl;
-//		circle(drawing, center[i], (int)radius[i], color, 2, 8, 0);
 
+		int x = (boundRect[i].x + boundRect[i].width) / 2;
+		int y = (boundRect[i].y + boundRect[i].height) / 2;
+
+		int imageWidth = 4160;	//width of the image in pixels
+		float horzViewAngle = 53.5;	//horizontal view angle of the camera
+		/*
+		 * Assume the change in x is proportional to change in angle:
+		 * 		dtheta = k * dx
+		 * So,
+		 * 		k = dtheta / dx
+		 * Assuming theta_initial = 0 and x_initial = 0
+		 * 		k = theta_max / x_max
+		 * 		k = horzViewAngle / imageWidth
+		 *
+		 * 	and
+		 *
+		 * 		theta = k * x
+		 * */
+		float conversion = horzViewAngle / imageWidth;
+		float theta = conversion * x;
+
+		cout << "\t\tAt (" << x << ", " << y << ") Cartesian or (?, " << theta << ") Polar\n";	//this can be turned into an angle as soon as we know the width of the field of view
 	}
 
 	cout << "\tDrawing Contours Window\n";
