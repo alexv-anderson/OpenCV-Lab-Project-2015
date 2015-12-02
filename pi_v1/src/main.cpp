@@ -1,20 +1,15 @@
-#include <opencv2/imgproc/imgproc.hpp>
-#include <iostream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/videoio/videoio.hpp>
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <vector>
 
 using namespace cv;
 using namespace std;
 
 #define USE_HIGUI
 
-#include "header.h"
+#include "imgProc.h"
 
 
 

@@ -1,6 +1,12 @@
 
-//#ifndef PROC_IMG
-//#define PROC_IMG
+#ifndef PROC_IMG
+#define PROC_IMG
+
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
+using namespace cv;
+using namespace std;
 
 #define SMALL_RECT_WIDTH 250
 #define SMALL_RECT_HEIGHT 250
@@ -73,4 +79,4 @@ vector <box> procImg(Mat src, int thresh, int blurMag)
 	return boxes;
 }
 
-//#endif	//PROC_IMG
+#endif	//PROC_IMG
