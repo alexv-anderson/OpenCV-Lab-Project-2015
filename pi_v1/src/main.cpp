@@ -27,6 +27,7 @@ int main (int argc, char** argv) {
 	{
 		cout << argv[1] << endl;
 		vidStream = new VideoCapture(argv[1]);
+
 	}
 	else
 		vidStream = new VideoCapture(0);
