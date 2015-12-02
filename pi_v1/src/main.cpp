@@ -7,24 +7,25 @@
 using namespace cv;
 using namespace std;
 
-#define USE_HIGUI
+#define SHOW_PROC_FEED
 
 #include "imgProc.h"
+#include "navigation.h"
+#include "driveGPIO.h"
 
+int main (int argc, char** argv)
+{
 
-
-// Function to get images
-
-int main (int argc, char** argv) {
 	// Open a video stream
 	VideoCapture* vidStream;
 	if(argc == 2)
 	{
+		//stream from file
 		cout << argv[1] << endl;
 		vidStream = new VideoCapture(argv[1]);
 	}
 	else
-		vidStream = new VideoCapture(0);
+		vidStream = new VideoCapture(0);	//stream from webcam
 
 	if(!vidStream->isOpened())
 	{
@@ -33,20 +34,22 @@ int main (int argc, char** argv) {
 	}
 
 	// Capture a frame (mat)
-
 	Mat frame;
-
 	while(true)
 	{
-	//vidStream.read(frame);
 		vidStream->read(frame);
 
+		// Pass the mat to the process function
+		// 0 < thresh < 255
+		// blur > 0
+		vector<box> boxes = procImg(frame, 100, 100);
 
-	// Pass the mat to the process function
-	// 0 < thresh < 255
-	// blur > 0
-	procImg(frame, 100, 100);
+		//filter through boxes to find waypoint amongst the obstacles
+
+		//generate command string to send through the GPIO
+
+		//send command string through GPIO
 	}
-	// Use boxes to navigate
+
 	return 0;
 }

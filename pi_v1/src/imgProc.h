@@ -1,6 +1,6 @@
 
-#ifndef PROC_IMG
-#define PROC_IMG
+#ifndef IMG_PROC_H
+#define IMG_PROC_H
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -36,13 +36,13 @@ vector <box> procImg(Mat src, int thresh, int blurMag)
 	vector<float> radius(contours.size());
 
 
-	for(int i = 0; i < contours.size(); i++)
+	for(unsigned int i = 0; i < contours.size(); i++)
 	{
 		approxPolyDP(Mat(contours[i]), contours_poly[i], 3, true);
 		boundRect[i] = boundingRect(Mat(contours_poly[i]));
 	}
 
-#ifdef USE_HIGUI
+#ifdef SHOW_PROC_FEED
 	string name = "Processed";
 	namedWindow(name, CV_WINDOW_NORMAL);
 	imshow(name, src);
@@ -50,13 +50,12 @@ vector <box> procImg(Mat src, int thresh, int blurMag)
 
 	vector <box> boxes;
 
-	for(int i = 0; i < contours.size(); i++)
+	for(unsigned int i = 0; i < contours.size(); i++)
 	{
 		if(boundRect[i].height <= SMALL_RECT_HEIGHT || boundRect[i].width <= SMALL_RECT_WIDTH)
 			continue;	//ignore small rectangles
 
 		int x = (boundRect[i].x + boundRect[i].width) / 2;
-		int y = (boundRect[i].y + boundRect[i].height) / 2;
 		/*
 		 * Assume the change in x is proportional to change in angle:
 		 * 		dtheta = k * dx
@@ -79,4 +78,4 @@ vector <box> procImg(Mat src, int thresh, int blurMag)
 	return boxes;
 }
 
-#endif	//PROC_IMG
+#endif	//IMG_PROC_H
