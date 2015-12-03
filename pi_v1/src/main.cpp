@@ -46,10 +46,21 @@ int main (int argc, char** argv)
 		vector<box> boxes = procImg(frame, 100, 100);
 
 		//filter through boxes to find waypoint amongst the obstacles
+		NavBoxes navBoxes = getNavBoxes(boxes);
 
 		//generate command string to send through the GPIO
+		NavBits navBits;
+		if(navBoxes.foundWaypoint)
+			navBits = waypointNav(navBoxes.waypoint);
+		else
+		{
+			navBits.go = false;
+			navBits.left = false;
+			navBits.right = false;
+		}
 
 		//send command string through GPIO
+		sendNavBits(navBits);
 	}
 
 	return 0;
