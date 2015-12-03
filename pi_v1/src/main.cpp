@@ -59,6 +59,7 @@ int main (int argc, char** argv)
 		}
 
 		//send command string through GPIO
+		sendNavBits(navBits);
 	}
 
 	return 0;
