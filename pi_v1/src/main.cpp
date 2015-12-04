@@ -36,6 +36,8 @@ int main (int argc, char** argv)
 
 	// Capture a frame (mat)
 	Mat frame;
+	// Initialize the driveGPIO module
+	driveGPIO_init();
 	while(true)
 	{
 		vidStream->read(frame);
@@ -62,6 +64,8 @@ int main (int argc, char** argv)
 		//send command string through GPIO
 		sendNavBits(navBits);
 	}
+	// Release the driveGPIO module
+	driveGPIO_close();
 
 	return 0;
 }
