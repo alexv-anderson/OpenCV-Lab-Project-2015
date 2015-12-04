@@ -2,8 +2,8 @@
 #ifndef DRIVE_GPIO_H
 #define DRIVE_GPIO_H
 
+#include "GPIOClass.h"
 #include "navigation.h"
-#include "gpio.h"
 
 // Globals
 GPIOClass* goPin;
